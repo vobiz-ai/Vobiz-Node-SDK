@@ -4,3 +4,5 @@ export { VobizClient } from "./Client.js";
 export { VobizEnvironment } from "./environments.js";
 export { VobizError, VobizTimeoutError } from "./errors/index.js";
 export * from "./exports.js";
+
+export { vobizxml } from "./vobizxml.js";
