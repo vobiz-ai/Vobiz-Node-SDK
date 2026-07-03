@@ -17,4 +17,18 @@ export interface ExportCdrsRequest {
     call_direction?: Vobiz.ExportCdrsRequestCallDirection;
     /** Minimum call duration in seconds. Excludes calls shorter than this value. */
     min_duration?: number;
+    /** Filter by the SIP Call-ID of the call (matches the cdr's sip_call_id field). */
+    sip_call_id?: string;
+    /** Filter by the UUID of the bridged leg (matches the cdr's bridge_uuid field). */
+    bridge_uuid?: string;
+    /** Filter by telephony hangup cause, e.g. NORMAL_CLEARING. */
+    hangup_cause?: string;
+    /** Filter by how the leg was released, e.g. send_refuse. */
+    hangup_disposition?: string;
+    /** Filter by the call context, e.g. sip-trunking. */
+    context?: string;
+    /** Filter by the campaign identifier associated with the call. */
+    campaign_id?: string;
+    /** Free-text search across CDR fields (numbers, IDs, etc.). */
+    search?: string;
 }

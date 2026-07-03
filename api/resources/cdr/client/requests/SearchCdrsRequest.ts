@@ -10,7 +10,12 @@ import type * as Vobiz from "../../../../index.js";
  *         to_number: "1234567890",
  *         start_date: "2026-03-01",
  *         end_date: "2026-03-17",
- *         min_duration: 10
+ *         min_duration: 10,
+ *         sip_call_id: "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+ *         bridge_uuid: "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+ *         hangup_cause: "NORMAL_CLEARING",
+ *         hangup_disposition: "send_refuse",
+ *         context: "sip-trunking"
  *     }
  */
 export interface SearchCdrsRequest {
@@ -28,6 +33,20 @@ export interface SearchCdrsRequest {
     call_direction?: Vobiz.SearchCdrsRequestCallDirection;
     /** Minimum call duration in seconds. Excludes calls shorter than this value. */
     min_duration?: number;
+    /** Filter by the SIP Call-ID of the call (matches the cdr's sip_call_id field). */
+    sip_call_id?: string;
+    /** Filter by the UUID of the bridged leg (matches the cdr's bridge_uuid field). */
+    bridge_uuid?: string;
+    /** Filter by telephony hangup cause, e.g. NORMAL_CLEARING. */
+    hangup_cause?: string;
+    /** Filter by how the leg was released, e.g. send_refuse. */
+    hangup_disposition?: string;
+    /** Filter by the call context, e.g. sip-trunking. */
+    context?: string;
+    /** Filter by the campaign identifier associated with the call. */
+    campaign_id?: string;
+    /** Free-text search across CDR fields (numbers, IDs, etc.). */
+    search?: string;
     /** Page number for paginated results. */
     page?: number;
     /** Number of records per page. Max: 100. */

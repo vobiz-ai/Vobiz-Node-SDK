@@ -493,6 +493,92 @@ export class PhoneNumbersClient {
     }
 
     /**
+     * Returns the health & analytics dashboard for one of your numbers: current
+     * status, spam flag, and call metrics over the selected window (total and
+     * answered calls, answer rate, minutes, average duration) plus a per-period
+     * time series of snapshots.
+     *
+     * @param {Vobiz.GetNumberHealthRequest} request
+     * @param {PhoneNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Vobiz.NotFoundError}
+     *
+     * @example
+     *     await client.phoneNumbers.getNumberHealth({
+     *         auth_id: "MA_XXXXXX",
+     *         e164: "%2B919876543210",
+     *         days: 30
+     *     })
+     */
+    public getNumberHealth(
+        request: Vobiz.GetNumberHealthRequest,
+        requestOptions?: PhoneNumbersClient.RequestOptions,
+    ): core.HttpResponsePromise<Vobiz.GetNumberHealthResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getNumberHealth(request, requestOptions));
+    }
+
+    private async __getNumberHealth(
+        request: Vobiz.GetNumberHealthRequest,
+        requestOptions?: PhoneNumbersClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Vobiz.GetNumberHealthResponse>> {
+        const { auth_id: authId, e164, granularity, days } = request;
+        const _queryParams: Record<string, unknown> = {
+            granularity: granularity != null ? granularity : undefined,
+            days,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.VobizEnvironment.Production,
+                `api/v1/account/${core.url.encodePathParam(authId)}/numbers/${core.url.encodePathParam(e164)}/health`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Vobiz.GetNumberHealthResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 404:
+                    throw new Vobiz.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.VobizError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/api/v1/account/{auth_id}/numbers/{e164}/health",
+        );
+    }
+
+    /**
      * Assign a parent-pool DID to a sub-account.
      *
      * @param {Vobiz.AssignDidToSubaccountRequest} request

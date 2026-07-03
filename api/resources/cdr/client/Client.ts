@@ -39,7 +39,12 @@ export class CdrClient {
      *         to_number: "1234567890",
      *         start_date: "2026-03-01",
      *         end_date: "2026-03-17",
-     *         min_duration: 10
+     *         min_duration: 10,
+     *         sip_call_id: "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+     *         bridge_uuid: "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+     *         hangup_cause: "NORMAL_CLEARING",
+     *         hangup_disposition: "send_refuse",
+     *         context: "sip-trunking"
      *     })
      */
     public listCdrs(
@@ -61,6 +66,13 @@ export class CdrClient {
             end_date: endDate,
             call_direction: callDirection,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
             page,
             per_page: perPage,
         } = request;
@@ -71,6 +83,13 @@ export class CdrClient {
             end_date: endDate != null ? endDate : undefined,
             call_direction: callDirection != null ? callDirection : undefined,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
             page,
             per_page: perPage,
         };
@@ -130,7 +149,12 @@ export class CdrClient {
      *         to_number: "1234567890",
      *         start_date: "2026-03-01",
      *         end_date: "2026-03-17",
-     *         min_duration: 10
+     *         min_duration: 10,
+     *         sip_call_id: "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+     *         bridge_uuid: "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+     *         hangup_cause: "NORMAL_CLEARING",
+     *         hangup_disposition: "send_refuse",
+     *         context: "sip-trunking"
      *     })
      */
     public searchCdrs(
@@ -152,6 +176,13 @@ export class CdrClient {
             end_date: endDate,
             call_direction: callDirection,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
             page,
             per_page: perPage,
         } = request;
@@ -162,6 +193,13 @@ export class CdrClient {
             end_date: endDate != null ? endDate : undefined,
             call_direction: callDirection != null ? callDirection : undefined,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
             page,
             per_page: perPage,
         };
@@ -311,6 +349,13 @@ export class CdrClient {
             end_date: endDate,
             call_direction: callDirection,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
         } = request;
         const _queryParams: Record<string, unknown> = {
             from_number: fromNumber,
@@ -319,6 +364,13 @@ export class CdrClient {
             end_date: endDate != null ? endDate : undefined,
             call_direction: callDirection != null ? callDirection : undefined,
             min_duration: minDuration,
+            sip_call_id: sipCallId,
+            bridge_uuid: bridgeUuid,
+            hangup_cause: hangupCause,
+            hangup_disposition: hangupDisposition,
+            context,
+            campaign_id: campaignId,
+            search,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
