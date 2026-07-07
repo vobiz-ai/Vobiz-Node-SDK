@@ -102,7 +102,9 @@ export class TrunksClient {
      *         auth_id: "MA_XXXXXX",
      *         name: "My Outbound Trunk",
      *         trunk_type: "OUTBOUND",
-     *         max_concurrent_calls: 10
+     *         max_concurrent_calls: 10,
+     *         webhook_url: "https://your-app.example.com/trunk-webhook",
+     *         webhook_method: "POST"
      *     })
      */
     public createTrunk(

@@ -17,4 +17,17 @@ export interface UpdateTrunkRequest {
     name: string;
     max_concurrent_calls: number;
     enabled: boolean;
+    /** HTTPS URL for real-time call-event webhooks (`CallInitiated`, `Hangup`). See [Trunk Webhooks](/trunks/webhook). */
+    webhook_url?: string;
+    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    webhook_method?: UpdateTrunkRequest.WebhookMethod;
+}
+
+export namespace UpdateTrunkRequest {
+    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    export const WebhookMethod = {
+        Post: "POST",
+        Get: "GET",
+    } as const;
+    export type WebhookMethod = (typeof WebhookMethod)[keyof typeof WebhookMethod];
 }

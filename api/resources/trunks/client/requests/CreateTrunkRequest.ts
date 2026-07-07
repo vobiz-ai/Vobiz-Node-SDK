@@ -6,7 +6,9 @@
  *         auth_id: "MA_XXXXXX",
  *         name: "My Outbound Trunk",
  *         trunk_type: "OUTBOUND",
- *         max_concurrent_calls: 10
+ *         max_concurrent_calls: 10,
+ *         webhook_url: "https://your-app.example.com/trunk-webhook",
+ *         webhook_method: "POST"
  *     }
  */
 export interface CreateTrunkRequest {
@@ -15,4 +17,21 @@ export interface CreateTrunkRequest {
     name: string;
     trunk_type: string;
     max_concurrent_calls: number;
+    /**
+     * HTTPS URL to receive real-time call-event webhooks (`CallInitiated`
+     * and `Hangup`) for this trunk. Max 500 characters; private, localhost,
+     * and cloud-metadata IPs are blocked. See [Trunk Webhooks](/trunks/webhook).
+     */
+    webhook_url?: string;
+    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    webhook_method?: CreateTrunkRequest.WebhookMethod;
+}
+
+export namespace CreateTrunkRequest {
+    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    export const WebhookMethod = {
+        Post: "POST",
+        Get: "GET",
+    } as const;
+    export type WebhookMethod = (typeof WebhookMethod)[keyof typeof WebhookMethod];
 }
