@@ -100,10 +100,16 @@ export class TrunksClient {
      * @example
      *     await client.trunks.createTrunk({
      *         auth_id: "MA_XXXXXX",
-     *         name: "My Outbound Trunk",
-     *         trunk_type: "OUTBOUND",
-     *         max_concurrent_calls: 10,
-     *         webhook_url: "https://your-app.example.com/trunk-webhook",
+     *         name: "Retell AI SIP",
+     *         trunk_direction: "outbound",
+     *         transport: "udp",
+     *         concurrent_calls_limit: 50,
+     *         cps_limit: 15,
+     *         credential_uuid: "b1e2...",
+     *         ipacl_uuid: "c3d4...",
+     *         recording: true,
+     *         enable_transcription: true,
+     *         webhook_url: "https://example.com/vobiz/webhook",
      *         webhook_method: "POST"
      *     })
      */
@@ -241,10 +247,7 @@ export class TrunksClient {
      * @example
      *     await client.trunks.updateTrunk({
      *         auth_id: "MA_XXXXXX",
-     *         trunk_id: "trunk_id",
-     *         name: "name",
-     *         max_concurrent_calls: 1,
-     *         enabled: true
+     *         trunk_id: "trunk_id"
      *     })
      */
     public updateTrunk(

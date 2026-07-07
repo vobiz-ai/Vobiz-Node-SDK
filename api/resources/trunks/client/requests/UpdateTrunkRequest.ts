@@ -4,27 +4,56 @@
  * @example
  *     {
  *         auth_id: "MA_XXXXXX",
- *         trunk_id: "trunk_id",
- *         name: "name",
- *         max_concurrent_calls: 1,
- *         enabled: true
+ *         trunk_id: "trunk_id"
  *     }
  */
 export interface UpdateTrunkRequest {
     /** Your account Auth ID */
     auth_id: string;
     trunk_id: string;
-    name: string;
-    max_concurrent_calls: number;
-    enabled: boolean;
-    /** HTTPS URL for real-time call-event webhooks (`CallInitiated`, `Hangup`). See [Trunk Webhooks](/trunks/webhook). */
+    name?: string;
+    /** Direction of the trunk — `inbound` or `outbound` only. */
+    trunk_direction?: UpdateTrunkRequest.TrunkDirection;
+    trunk_status?: UpdateTrunkRequest.TrunkStatus;
+    secure?: boolean;
+    trunk_domain?: string;
+    transport?: UpdateTrunkRequest.Transport;
+    inbound_destination?: string;
+    description?: string;
+    concurrent_calls_limit?: number;
+    cps_limit?: number;
+    credential_uuid?: string;
+    ipacl_uuid?: string;
+    primary_uri_uuid?: string;
+    fallback_uri_uuid?: string;
+    recording?: boolean;
+    enable_transcription?: boolean;
+    pii_redaction?: boolean;
+    pii_entity_types?: string;
+    /** Customer webhook for call-admission events (`CallInitiated` / `Hangup`). Public http/https URL; SSRF-validated. See [Trunk Webhooks](/trunks/webhook). */
     webhook_url?: string;
-    /** HTTP method for the webhook callback. Defaults to `POST`. */
     webhook_method?: UpdateTrunkRequest.WebhookMethod;
+    recording_webhook_enabled?: boolean;
 }
 
 export namespace UpdateTrunkRequest {
-    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    /** Direction of the trunk — `inbound` or `outbound` only. */
+    export const TrunkDirection = {
+        Inbound: "inbound",
+        Outbound: "outbound",
+    } as const;
+    export type TrunkDirection = (typeof TrunkDirection)[keyof typeof TrunkDirection];
+    export const TrunkStatus = {
+        Enabled: "enabled",
+        Disabled: "disabled",
+    } as const;
+    export type TrunkStatus = (typeof TrunkStatus)[keyof typeof TrunkStatus];
+    export const Transport = {
+        Udp: "udp",
+        Tcp: "tcp",
+        Tls: "tls",
+    } as const;
+    export type Transport = (typeof Transport)[keyof typeof Transport];
     export const WebhookMethod = {
         Post: "POST",
         Get: "GET",

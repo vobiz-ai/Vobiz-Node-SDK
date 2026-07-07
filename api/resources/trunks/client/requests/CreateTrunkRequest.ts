@@ -4,31 +4,93 @@
  * @example
  *     {
  *         auth_id: "MA_XXXXXX",
- *         name: "My Outbound Trunk",
- *         trunk_type: "OUTBOUND",
- *         max_concurrent_calls: 10,
- *         webhook_url: "https://your-app.example.com/trunk-webhook",
+ *         name: "Retell AI SIP",
+ *         trunk_direction: "outbound",
+ *         transport: "udp",
+ *         concurrent_calls_limit: 50,
+ *         cps_limit: 15,
+ *         credential_uuid: "b1e2...",
+ *         ipacl_uuid: "c3d4...",
+ *         recording: true,
+ *         enable_transcription: true,
+ *         webhook_url: "https://example.com/vobiz/webhook",
  *         webhook_method: "POST"
  *     }
  */
 export interface CreateTrunkRequest {
     /** Your account Auth ID */
     auth_id: string;
+    /** Trunk name. */
     name: string;
-    trunk_type: string;
-    max_concurrent_calls: number;
+    /** Direction of the trunk — **`inbound` or `outbound` only** (a trunk is one direction, not both). */
+    trunk_direction?: CreateTrunkRequest.TrunkDirection;
+    /** Trunk status — `enabled` or `disabled` (note: not `active`). */
+    trunk_status?: CreateTrunkRequest.TrunkStatus;
+    secure?: boolean;
+    /** SIP domain. Auto-generated as `{first8ofUUID}.sip.vobiz.ai` if omitted. */
+    trunk_domain?: string;
+    transport?: CreateTrunkRequest.Transport;
+    inbound_destination?: string;
+    description?: string;
+    /** Stored on the trunk. The **enforced** concurrency limit is account-level (account base + channel subscriptions), not this field. */
+    concurrent_calls_limit?: number;
+    /** Stored on the trunk. The **enforced** CPS is account-level, not this field. */
+    cps_limit?: number;
+    /** Attach an existing SIP credential (username / password / realm) by UUID. */
+    credential_uuid?: string;
+    /** Attach an existing IP access-control list (IP-based auth) by UUID. */
+    ipacl_uuid?: string;
+    /** Primary origination URI UUID. */
+    primary_uri_uuid?: string;
+    /** Fallback origination URI UUID. */
+    fallback_uri_uuid?: string;
+    /** Enable call recording. */
+    recording?: boolean;
+    /** Auto-transcribe recordings when `recording=true`. */
+    enable_transcription?: boolean;
+    /** Redact PII from transcriptions. */
+    pii_redaction?: boolean;
+    /** Comma-separated list of entity types to redact. */
+    pii_entity_types?: string;
     /**
-     * HTTPS URL to receive real-time call-event webhooks (`CallInitiated`
-     * and `Hangup`) for this trunk. Max 500 characters; private, localhost,
-     * and cloud-metadata IPs are blocked. See [Trunk Webhooks](/trunks/webhook).
+     * Customer webhook for call-admission events (`CallInitiated` / `Hangup`).
+     * Must be a valid **public** http/https URL. SSRF-validated — localhost,
+     * private (RFC1918), and cloud-metadata (`169.254.169.254`) URLs are
+     * rejected with `invalid webhook_url`. See [Trunk Webhooks](/trunks/webhook).
      */
     webhook_url?: string;
-    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    /** HTTP method for the webhook callback. */
     webhook_method?: CreateTrunkRequest.WebhookMethod;
+    /** Fire a `recording.completed` webhook to `webhook_url` after a recording is saved. */
+    recording_webhook_enabled?: boolean;
+    /** Deprecated — use `credential_uuid`. */
+    username?: string;
+    /** Deprecated — use `credential_uuid`. */
+    password?: string;
+    /** Deprecated — use `ipacl_uuid`. */
+    ip_whitelist?: string[];
 }
 
 export namespace CreateTrunkRequest {
-    /** HTTP method for the webhook callback. Defaults to `POST`. */
+    /** Direction of the trunk — **`inbound` or `outbound` only** (a trunk is one direction, not both). */
+    export const TrunkDirection = {
+        Inbound: "inbound",
+        Outbound: "outbound",
+    } as const;
+    export type TrunkDirection = (typeof TrunkDirection)[keyof typeof TrunkDirection];
+    /** Trunk status — `enabled` or `disabled` (note: not `active`). */
+    export const TrunkStatus = {
+        Enabled: "enabled",
+        Disabled: "disabled",
+    } as const;
+    export type TrunkStatus = (typeof TrunkStatus)[keyof typeof TrunkStatus];
+    export const Transport = {
+        Udp: "udp",
+        Tcp: "tcp",
+        Tls: "tls",
+    } as const;
+    export type Transport = (typeof Transport)[keyof typeof Transport];
+    /** HTTP method for the webhook callback. */
     export const WebhookMethod = {
         Post: "POST",
         Get: "GET",
