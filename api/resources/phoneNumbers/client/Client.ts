@@ -191,10 +191,11 @@ export class PhoneNumbersClient {
         request: Vobiz.ListInventoryNumbersRequest,
         requestOptions?: PhoneNumbersClient.RequestOptions,
     ): Promise<core.WithRawResponse<Vobiz.ListInventoryNumbersResponse>> {
-        const { auth_id: authId, country, search, page, per_page: perPage } = request;
+        const { auth_id: authId, country, search, exclude, page, per_page: perPage } = request;
         const _queryParams: Record<string, unknown> = {
             country,
             search,
+            exclude,
             page,
             per_page: perPage,
         };
