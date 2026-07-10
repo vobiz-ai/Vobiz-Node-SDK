@@ -177,7 +177,8 @@ export class PhoneNumbersClient {
      * @example
      *     await client.phoneNumbers.listInventoryNumbers({
      *         auth_id: "MA_XXXXXX",
-     *         country: "IN"
+     *         country: "IN",
+     *         exclude: "9180,9192"
      *     })
      */
     public listInventoryNumbers(
