@@ -2,5 +2,6 @@
 
 export interface ListConferencesResponse {
     api_id: string;
-    conferences: unknown[];
+    /** Conference names reported by the API. An empty array is inconclusive. */
+    conferences: string[];
 }

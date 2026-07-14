@@ -38,14 +38,14 @@ export class ConferenceMembersClient {
     public muteMember(
         request: Vobiz.MuteMemberRequest,
         requestOptions?: ConferenceMembersClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
+    ): core.HttpResponsePromise<unknown> {
         return core.HttpResponsePromise.fromPromise(this.__muteMember(request, requestOptions));
     }
 
     private async __muteMember(
         request: Vobiz.MuteMemberRequest,
         requestOptions?: ConferenceMembersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
+    ): Promise<core.WithRawResponse<unknown>> {
         const { auth_id: authId, conference_name: conferenceName, member_id: memberId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -71,7 +71,7 @@ export class ConferenceMembersClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
+            return { data: _response.body, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {

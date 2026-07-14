@@ -23,7 +23,7 @@ export class ConferenceRecordingClient {
     }
 
     /**
-     * Begin recording all audio in a conference room.
+     * Queue recording for all audio in a conference room. The response does not include a recording ID or download URL.
      *
      * @param {Vobiz.StartConferenceRecordingRequest} request
      * @param {ConferenceRecordingClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -37,14 +37,14 @@ export class ConferenceRecordingClient {
     public startConferenceRecording(
         request: Vobiz.StartConferenceRecordingRequest,
         requestOptions?: ConferenceRecordingClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
+    ): core.HttpResponsePromise<unknown> {
         return core.HttpResponsePromise.fromPromise(this.__startConferenceRecording(request, requestOptions));
     }
 
     private async __startConferenceRecording(
         request: Vobiz.StartConferenceRecordingRequest,
         requestOptions?: ConferenceRecordingClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
+    ): Promise<core.WithRawResponse<unknown>> {
         const { auth_id: authId, conference_name: conferenceName, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -73,7 +73,7 @@ export class ConferenceRecordingClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
+            return { data: _response.body, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {

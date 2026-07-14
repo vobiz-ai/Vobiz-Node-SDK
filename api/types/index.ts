@@ -8,6 +8,7 @@ export * from "./Endpoint.js";
 export * from "./Error_.js";
 export * from "./InventoryNumber.js";
 export * from "./KycVerificationResult.js";
+export * from "./NotFoundErrorBody.js";
 export * from "./PartnerAnalytics.js";
 export * from "./PartnerCdr.js";
 export * from "./PartnerCustomer.js";

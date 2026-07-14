@@ -7,7 +7,7 @@ import * as core from "../../../../core/index.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
-import type * as Vobiz from "../../../index.js";
+import * as Vobiz from "../../../index.js";
 
 export declare namespace ConferencesClient {
     export type Options = BaseClientOptions;
@@ -23,7 +23,7 @@ export class ConferencesClient {
     }
 
     /**
-     * Retrieve all active conference rooms on the account.
+     * Retrieve conference room names reported by the API. An empty array is inconclusive and can occur while conferences are active. Maintain your own room registry for authoritative discovery, billing, cleanup, and destructive workflows.
      *
      * @param {Vobiz.ListConferencesRequest} request
      * @param {ConferencesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -155,10 +155,12 @@ export class ConferencesClient {
     }
 
     /**
-     * Get details and member list of a specific conference room.
+     * Retrieve a specific conference room. A live conference can currently return a 200 response with an error payload instead of conference details.
      *
      * @param {Vobiz.GetConferenceRequest} request
      * @param {ConferencesClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Vobiz.NotFoundError}
      *
      * @example
      *     await client.conferences.getConference({
@@ -169,14 +171,14 @@ export class ConferencesClient {
     public getConference(
         request: Vobiz.GetConferenceRequest,
         requestOptions?: ConferencesClient.RequestOptions,
-    ): core.HttpResponsePromise<unknown> {
+    ): core.HttpResponsePromise<Vobiz.GetConferenceResponse> {
         return core.HttpResponsePromise.fromPromise(this.__getConference(request, requestOptions));
     }
 
     private async __getConference(
         request: Vobiz.GetConferenceRequest,
         requestOptions?: ConferencesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<unknown>> {
+    ): Promise<core.WithRawResponse<Vobiz.GetConferenceResponse>> {
         const { auth_id: authId, conference_name: conferenceName } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -202,15 +204,20 @@ export class ConferencesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body, rawResponse: _response.rawResponse };
+            return { data: _response.body as Vobiz.GetConferenceResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
-            throw new errors.VobizError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
+            switch (_response.error.statusCode) {
+                case 404:
+                    throw new Vobiz.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.VobizError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
         }
 
         return handleNonStatusCodeError(

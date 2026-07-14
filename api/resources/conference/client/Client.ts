@@ -26,7 +26,7 @@ export class ConferenceClient {
     }
 
     /**
-     * Remove a specific participant from a conference call.
+     * Remove one or more participants from a conference while allowing their XML flow to continue.
      *
      * @param {Vobiz.KickMemberRequest} request
      * @param {ConferenceClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -94,7 +94,7 @@ export class ConferenceClient {
     }
 
     /**
-     * Disconnect a specific member from a conference.
+     * Terminate one or more active conference member calls. A normal active-member request disconnects the member. If a member was kicked, continued its XML flow, and rejoined with the same numeric member ID, confirm removal through conference exit or call hangup callbacks.
      *
      * @param {Vobiz.HangupMemberRequest} request
      * @param {ConferenceClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -178,14 +178,14 @@ export class ConferenceClient {
     public playAudioMember(
         request: Vobiz.PlayAudioMemberRequest,
         requestOptions?: ConferenceClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
+    ): core.HttpResponsePromise<unknown> {
         return core.HttpResponsePromise.fromPromise(this.__playAudioMember(request, requestOptions));
     }
 
     private async __playAudioMember(
         request: Vobiz.PlayAudioMemberRequest,
         requestOptions?: ConferenceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
+    ): Promise<core.WithRawResponse<unknown>> {
         const { auth_id: authId, conference_name: conferenceName, member_id: memberId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -214,7 +214,7 @@ export class ConferenceClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
+            return { data: _response.body, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -317,14 +317,14 @@ export class ConferenceClient {
     public deafMember(
         request: Vobiz.DeafMemberRequest,
         requestOptions?: ConferenceClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
+    ): core.HttpResponsePromise<unknown> {
         return core.HttpResponsePromise.fromPromise(this.__deafMember(request, requestOptions));
     }
 
     private async __deafMember(
         request: Vobiz.DeafMemberRequest,
         requestOptions?: ConferenceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
+    ): Promise<core.WithRawResponse<unknown>> {
         const { auth_id: authId, conference_name: conferenceName, member_id: memberId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -350,7 +350,7 @@ export class ConferenceClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
+            return { data: _response.body, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
