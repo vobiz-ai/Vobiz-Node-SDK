@@ -33,7 +33,8 @@ export class PhoneNumbersClient {
      *
      * @example
      *     await client.phoneNumbers.listNumbers({
-     *         auth_id: "MA_XXXXXX"
+     *         auth_id: "MA_XXXXXX",
+     *         search: "+919876543210"
      *     })
      */
     public listNumbers(
@@ -47,10 +48,11 @@ export class PhoneNumbersClient {
         request: Vobiz.ListNumbersRequest,
         requestOptions?: PhoneNumbersClient.RequestOptions,
     ): Promise<core.WithRawResponse<Vobiz.ListNumbersResponse>> {
-        const { auth_id: authId, limit, offset } = request;
+        const { auth_id: authId, page, per_page: perPage, search } = request;
         const _queryParams: Record<string, unknown> = {
-            limit,
-            offset,
+            page,
+            per_page: perPage,
+            search,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(

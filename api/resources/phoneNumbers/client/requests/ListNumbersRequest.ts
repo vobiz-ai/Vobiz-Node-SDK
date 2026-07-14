@@ -3,12 +3,17 @@
 /**
  * @example
  *     {
- *         auth_id: "MA_XXXXXX"
+ *         auth_id: "MA_XXXXXX",
+ *         search: "+919876543210"
  *     }
  */
 export interface ListNumbersRequest {
     /** Your account Auth ID */
     auth_id: string;
-    limit?: number;
-    offset?: number;
+    /** Page number, starting at 1 */
+    page?: number;
+    /** Number of phone numbers to return per page */
+    per_page?: number;
+    /** Filter by phone number. Include the country code and URL-encode a leading plus sign. */
+    search?: string;
 }
