@@ -609,6 +609,10 @@ export class PartnerApiClient {
     }
 
     /**
+     * Returns the authenticated partner's KYC sessions. Filter the list by
+     * session status or customer account, and use `page` and `size` to
+     * paginate the results.
+     *
      * @param {Vobiz.ListKycSessionsRequest} request
      * @param {PartnerApiClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -751,6 +755,9 @@ export class PartnerApiClient {
     }
 
     /**
+     * Returns the current status and available details for one KYC session
+     * owned by the authenticated partner.
+     *
      * @param {Vobiz.GetKycSessionRequest} request
      * @param {PartnerApiClient.RequestOptions} requestOptions - Request-specific configuration.
      *
