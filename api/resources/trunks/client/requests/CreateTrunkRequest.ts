@@ -22,9 +22,9 @@ export interface CreateTrunkRequest {
     auth_id: string;
     /** Trunk name. */
     name: string;
-    /** Direction of the trunk — **`inbound` or `outbound` only** (a trunk is one direction, not both). */
+    /** Direction of the trunk - **`inbound` or `outbound` only** (a trunk is one direction, not both). */
     trunk_direction?: CreateTrunkRequest.TrunkDirection;
-    /** Trunk status — `enabled` or `disabled` (note: not `active`). */
+    /** Trunk status - `enabled` or `disabled` (note: not `active`). */
     trunk_status?: CreateTrunkRequest.TrunkStatus;
     secure?: boolean;
     /** SIP domain. Auto-generated as `{first8ofUUID}.sip.vobiz.ai` if omitted. */
@@ -54,7 +54,7 @@ export interface CreateTrunkRequest {
     pii_entity_types?: string;
     /**
      * Customer webhook for call-admission events (`CallInitiated` / `Hangup`).
-     * Must be a valid **public** http/https URL. SSRF-validated — localhost,
+     * Must be a valid **public** http/https URL. SSRF-validated - localhost,
      * private (RFC1918), and cloud-metadata (`169.254.169.254`) URLs are
      * rejected with `invalid webhook_url`. See [Trunk Webhooks](/trunks/webhook).
      */
@@ -63,22 +63,22 @@ export interface CreateTrunkRequest {
     webhook_method?: CreateTrunkRequest.WebhookMethod;
     /** Fire a `recording.completed` webhook to `webhook_url` after a recording is saved. */
     recording_webhook_enabled?: boolean;
-    /** Deprecated — use `credential_uuid`. */
+    /** Deprecated - use `credential_uuid`. */
     username?: string;
-    /** Deprecated — use `credential_uuid`. */
+    /** Deprecated - use `credential_uuid`. */
     password?: string;
-    /** Deprecated — use `ipacl_uuid`. */
+    /** Deprecated - use `ipacl_uuid`. */
     ip_whitelist?: string[];
 }
 
 export namespace CreateTrunkRequest {
-    /** Direction of the trunk — **`inbound` or `outbound` only** (a trunk is one direction, not both). */
+    /** Direction of the trunk - **`inbound` or `outbound` only** (a trunk is one direction, not both). */
     export const TrunkDirection = {
         Inbound: "inbound",
         Outbound: "outbound",
     } as const;
     export type TrunkDirection = (typeof TrunkDirection)[keyof typeof TrunkDirection];
-    /** Trunk status — `enabled` or `disabled` (note: not `active`). */
+    /** Trunk status - `enabled` or `disabled` (note: not `active`). */
     export const TrunkStatus = {
         Enabled: "enabled",
         Disabled: "disabled",

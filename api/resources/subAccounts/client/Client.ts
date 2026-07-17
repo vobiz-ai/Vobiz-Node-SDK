@@ -96,9 +96,9 @@ export class SubAccountsClient {
      *
      * Set `kyc_mode` to control how the sub-account is verified:
      *
-     * - `personal_use` *(default)* — the sub-account inherits the parent's
+     * - `personal_use` *(default)* - the sub-account inherits the parent's
      *   KYC; no separate verification is required.
-     * - `customer_use` — the sub-account must complete its own KYC before it
+     * - `customer_use` - the sub-account must complete its own KYC before it
      *   can place calls. A fresh `customer_use` sub-account is returned with
      *   `kyc_calls_blocked: true`. `customer_use` **requires** `email`.
      *

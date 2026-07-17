@@ -26,7 +26,7 @@ export class SubAccountKycTestModeClient {
     }
 
     /**
-     * Mock PAN verification — never hits the provider. Magic `pan` inputs:
+     * Mock PAN verification - never hits the provider. Magic `pan` inputs:
      *
      * | Input | Outcome |
      * |---|---|
@@ -458,7 +458,7 @@ export class SubAccountKycTestModeClient {
 
     /**
      * Promotes the most recent **pending** mock verification of the given
-     * type to a terminal outcome — this drives the async (`TESTPENDING…`)
+     * type to a terminal outcome - this drives the async (`TESTPENDING…`)
      * path without webhooks. `verification_type` ∈ `pan | aadhaar | gst | cin`;
      * `outcome` ∈ `verified | failed`.
      *

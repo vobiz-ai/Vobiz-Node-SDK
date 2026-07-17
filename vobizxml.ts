@@ -1,5 +1,5 @@
 /**
- * vobizxml — build VobizXML call-control documents in Node/TypeScript.
+ * vobizxml - build VobizXML call-control documents in Node/TypeScript.
  *
  * Mirrors Plivo's `plivoxml` (ResponseElement + add* builders + toString()) and emits
  * XML byte-identical to the Python `vobizxml` package. Single self-contained file so it

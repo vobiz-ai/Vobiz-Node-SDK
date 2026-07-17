@@ -12,7 +12,7 @@ export interface UpdateTrunkRequest {
     auth_id: string;
     trunk_id: string;
     name?: string;
-    /** Direction of the trunk — `inbound` or `outbound` only. */
+    /** Direction of the trunk - `inbound` or `outbound` only. */
     trunk_direction?: UpdateTrunkRequest.TrunkDirection;
     trunk_status?: UpdateTrunkRequest.TrunkStatus;
     secure?: boolean;
@@ -37,7 +37,7 @@ export interface UpdateTrunkRequest {
 }
 
 export namespace UpdateTrunkRequest {
-    /** Direction of the trunk — `inbound` or `outbound` only. */
+    /** Direction of the trunk - `inbound` or `outbound` only. */
     export const TrunkDirection = {
         Inbound: "inbound",
         Outbound: "outbound",
