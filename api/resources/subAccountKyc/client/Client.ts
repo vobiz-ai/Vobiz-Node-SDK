@@ -58,7 +58,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -84,7 +87,7 @@ export class SubAccountKycClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 403:
-                    throw new Vobiz.ForbiddenError(_response.error.body as Vobiz.Error_, _response.rawResponse);
+                    throw new Vobiz.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Vobiz.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -136,7 +139,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -213,7 +219,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -289,7 +298,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -360,7 +372,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -433,7 +448,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -503,7 +521,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -597,7 +618,10 @@ export class SubAccountKycClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

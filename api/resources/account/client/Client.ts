@@ -48,7 +48,10 @@ export class AccountClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -114,7 +117,10 @@ export class AccountClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken }),
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -150,6 +156,185 @@ export class AccountClient {
             _response.rawResponse,
             "GET",
             "/api/v1/Account/{auth_id}/concurrency",
+        );
+    }
+
+    /**
+     * Calculate the monthly price for CPS or concurrent-call capacity without purchasing capacity or debiting the account.
+     *
+     * @param {Vobiz.PreviewChannelPricingRequest} request
+     * @param {AccountClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Vobiz.BadRequestError}
+     * @throws {@link Vobiz.UnauthorizedError}
+     * @throws {@link Vobiz.ForbiddenError}
+     *
+     * @example
+     *     await client.account.previewChannelPricing({
+     *         auth_id: "MA_XXXX",
+     *         resource_type: "concurrent_calls",
+     *         quantity: 30
+     *     })
+     */
+    public previewChannelPricing(
+        request: Vobiz.PreviewChannelPricingRequest,
+        requestOptions?: AccountClient.RequestOptions,
+    ): core.HttpResponsePromise<Vobiz.ChannelPricingPreview> {
+        return core.HttpResponsePromise.fromPromise(this.__previewChannelPricing(request, requestOptions));
+    }
+
+    private async __previewChannelPricing(
+        request: Vobiz.PreviewChannelPricingRequest,
+        requestOptions?: AccountClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Vobiz.ChannelPricingPreview>> {
+        const { auth_id: authId, resource_type: resourceType, quantity } = request;
+        const _queryParams: Record<string, unknown> = {
+            resource_type: resourceType,
+            quantity,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.VobizEnvironment.Production,
+                `api/v1/accounts/${core.url.encodePathParam(authId)}/channel-pricing-preview`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Vobiz.ChannelPricingPreview, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Vobiz.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Vobiz.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Vobiz.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.VobizError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/api/v1/accounts/{auth_id}/channel-pricing-preview",
+        );
+    }
+
+    /**
+     * Purchase recurring CPS or concurrent-call capacity. A successful request immediately debits the first monthly charge and activates a subscription that renews every 30 days.
+     *
+     * @param {Vobiz.ChannelSubscriptionRequest} request
+     * @param {AccountClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Vobiz.BadRequestError}
+     * @throws {@link Vobiz.UnauthorizedError}
+     * @throws {@link Vobiz.ForbiddenError}
+     *
+     * @example
+     *     await client.account.createChannelSubscription({
+     *         auth_id: "MA_XXXX",
+     *         resource_type: "concurrent_calls",
+     *         quantity: 30
+     *     })
+     */
+    public createChannelSubscription(
+        request: Vobiz.ChannelSubscriptionRequest,
+        requestOptions?: AccountClient.RequestOptions,
+    ): core.HttpResponsePromise<Vobiz.ChannelSubscription> {
+        return core.HttpResponsePromise.fromPromise(this.__createChannelSubscription(request, requestOptions));
+    }
+
+    private async __createChannelSubscription(
+        request: Vobiz.ChannelSubscriptionRequest,
+        requestOptions?: AccountClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Vobiz.ChannelSubscription>> {
+        const { auth_id: authId, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.VobizEnvironment.Production,
+                `api/v1/accounts/${core.url.encodePathParam(authId)}/channel-subscriptions`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: _body,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Vobiz.ChannelSubscription, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Vobiz.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Vobiz.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Vobiz.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.VobizError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/api/v1/accounts/{auth_id}/channel-subscriptions",
         );
     }
 }
