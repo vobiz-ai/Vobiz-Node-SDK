@@ -116,20 +116,20 @@ export class PhoneNumbersClient {
      * @example
      *     await client.phoneNumbers.unrentNumber({
      *         auth_id: "MA_XXXXXX",
-     *         e164: "919876543210"
+     *         e164: "%2B919876543210"
      *     })
      */
     public unrentNumber(
         request: Vobiz.UnrentNumberRequest,
         requestOptions?: PhoneNumbersClient.RequestOptions,
-    ): core.HttpResponsePromise<void> {
+    ): core.HttpResponsePromise<Vobiz.UnrentNumberResponse> {
         return core.HttpResponsePromise.fromPromise(this.__unrentNumber(request, requestOptions));
     }
 
     private async __unrentNumber(
         request: Vobiz.UnrentNumberRequest,
         requestOptions?: PhoneNumbersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<void>> {
+    ): Promise<core.WithRawResponse<Vobiz.UnrentNumberResponse>> {
         const { auth_id: authId, e164, immediate } = request;
         const _queryParams: Record<string, unknown> = {
             immediate,
@@ -165,7 +165,7 @@ export class PhoneNumbersClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: undefined, rawResponse: _response.rawResponse };
+            return { data: _response.body as Vobiz.UnrentNumberResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -187,8 +187,8 @@ export class PhoneNumbersClient {
     /**
      * Cancel a pending number release during the 24-hour cooldown. The number is
      * restored to `active`, the cooldown timer is cleared, and the release fee is
-     * refunded. Any trunk or voice application detached by the release is not
-     * re-attached automatically.
+     * refunded in full to the account balance. Any trunk or voice application
+     * detached by the release is not re-attached automatically.
      *
      * @param {Vobiz.CancelNumberReleaseRequest} request
      * @param {PhoneNumbersClient.RequestOptions} requestOptions - Request-specific configuration.

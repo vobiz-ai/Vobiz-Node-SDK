@@ -4,13 +4,13 @@
  * @example
  *     {
  *         auth_id: "MA_XXXXXX",
- *         e164: "919876543210"
+ *         e164: "%2B919876543210"
  *     }
  */
 export interface UnrentNumberRequest {
     /** Your account Auth ID */
     auth_id: string;
-    /** Phone number in E.164 format (without the +) */
+    /** The URL-encoded phone number in E.164 format. Encode `+` as `%2B`. */
     e164: string;
     /** Skip the 24-hour cooldown and release the number immediately. */
     immediate?: boolean;

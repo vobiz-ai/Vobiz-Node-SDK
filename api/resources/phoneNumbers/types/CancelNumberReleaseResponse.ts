@@ -3,7 +3,9 @@
 export interface CancelNumberReleaseResponse {
     message: string;
     status: CancelNumberReleaseResponse.Status;
-    refund_status: CancelNumberReleaseResponse.RefundStatus;
+    currency?: string | undefined;
+    refund_amount?: number | undefined;
+    refund_status?: CancelNumberReleaseResponse.RefundStatus | undefined;
     /** Present when the refund could not be processed. */
     refund_error?: string | undefined;
 }
