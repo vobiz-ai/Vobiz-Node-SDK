@@ -12,4 +12,6 @@ export interface UnrentNumberRequest {
     auth_id: string;
     /** Phone number in E.164 format (without the +) */
     e164: string;
+    /** Skip the 24-hour cooldown and release the number immediately. */
+    immediate?: boolean;
 }

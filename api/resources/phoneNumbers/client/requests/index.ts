@@ -1,5 +1,6 @@
 export type { AssignDidToSubaccountRequest } from "./AssignDidToSubaccountRequest.js";
 export type { AssignNumberToTrunkRequest } from "./AssignNumberToTrunkRequest.js";
+export type { CancelNumberReleaseRequest } from "./CancelNumberReleaseRequest.js";
 export type { GetNumberHealthRequest } from "./GetNumberHealthRequest.js";
 export type { ListInventoryNumbersRequest } from "./ListInventoryNumbersRequest.js";
 export type { ListNumbersRequest } from "./ListNumbersRequest.js";

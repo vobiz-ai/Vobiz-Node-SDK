@@ -105,7 +105,10 @@ export class PhoneNumbersClient {
     }
 
     /**
-     * Release a phone number from your account.
+     * Release a phone number from your account. By default, the number enters
+     * `pending_release` for a 24-hour cooldown. You can cancel the release during
+     * that window. Set `immediate=true` to skip the cooldown; an immediate release
+     * cannot be cancelled.
      *
      * @param {Vobiz.UnrentNumberRequest} request
      * @param {PhoneNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -127,7 +130,10 @@ export class PhoneNumbersClient {
         request: Vobiz.UnrentNumberRequest,
         requestOptions?: PhoneNumbersClient.RequestOptions,
     ): Promise<core.WithRawResponse<void>> {
-        const { auth_id: authId, e164 } = request;
+        const { auth_id: authId, e164, immediate } = request;
+        const _queryParams: Record<string, unknown> = {
+            immediate,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -147,7 +153,11 @@ export class PhoneNumbersClient {
             ),
             method: "DELETE",
             headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -171,6 +181,95 @@ export class PhoneNumbersClient {
             _response.rawResponse,
             "DELETE",
             "/api/v1/Account/{auth_id}/numbers/{e164}",
+        );
+    }
+
+    /**
+     * Cancel a pending number release during the 24-hour cooldown. The number is
+     * restored to `active`, the cooldown timer is cleared, and the release fee is
+     * refunded. Any trunk or voice application detached by the release is not
+     * re-attached automatically.
+     *
+     * @param {Vobiz.CancelNumberReleaseRequest} request
+     * @param {PhoneNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Vobiz.BadRequestError}
+     * @throws {@link Vobiz.UnauthorizedError}
+     * @throws {@link Vobiz.ForbiddenError}
+     * @throws {@link Vobiz.NotFoundError}
+     *
+     * @example
+     *     await client.phoneNumbers.cancelNumberRelease({
+     *         account_id: "MA_XXXXXX",
+     *         e164: "%2B919876543210"
+     *     })
+     */
+    public cancelNumberRelease(
+        request: Vobiz.CancelNumberReleaseRequest,
+        requestOptions?: PhoneNumbersClient.RequestOptions,
+    ): core.HttpResponsePromise<Vobiz.CancelNumberReleaseResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__cancelNumberRelease(request, requestOptions));
+    }
+
+    private async __cancelNumberRelease(
+        request: Vobiz.CancelNumberReleaseRequest,
+        requestOptions?: PhoneNumbersClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Vobiz.CancelNumberReleaseResponse>> {
+        const { account_id: accountId, e164 } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.VobizEnvironment.Production,
+                `api/v1/account/${core.url.encodePathParam(accountId)}/numbers/${core.url.encodePathParam(e164)}/cancel-release`,
+            ),
+            method: "POST",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Vobiz.CancelNumberReleaseResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Vobiz.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Vobiz.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Vobiz.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Vobiz.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.VobizError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/api/v1/account/{account_id}/numbers/{e164}/cancel-release",
         );
     }
 
