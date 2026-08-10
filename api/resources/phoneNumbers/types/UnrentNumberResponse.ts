@@ -5,6 +5,7 @@ export interface UnrentNumberResponse {
     cooldown_ends_at: string;
     message: string;
     note?: string | undefined;
+    /** The account-specific fee charged for releasing the number. */
     release_fee: number;
     status: string;
 }

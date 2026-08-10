@@ -9,11 +9,25 @@
  *         answer_url: "https://example.com/answer",
  *         answer_method: "POST"
  *     }
+ *
+ * @example
+ *     {
+ *         auth_id: "MA_XXXXXX",
+ *         from: "14155551234",
+ *         to: "+919876543210<+919876543211<+919876543212",
+ *         answer_url: "https://example.com/answer",
+ *         answer_method: "POST"
+ *     }
  */
 export interface MakeCallRequest {
     /** Your account Auth ID */
     auth_id: string;
     from: string;
+    /**
+     * Destination PSTN number or SIP endpoint. Separate multiple destinations with
+     * the `<` character to fan out a single request to up to 1000 destinations,
+     * for example `+919876543210<+919876543211`.
+     */
     to: string;
     answer_url: string;
     answer_method: string;

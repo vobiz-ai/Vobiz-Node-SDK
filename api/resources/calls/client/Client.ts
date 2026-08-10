@@ -40,6 +40,15 @@ export class CallsClient {
      *         answer_url: "https://example.com/answer",
      *         answer_method: "POST"
      *     })
+     *
+     * @example
+     *     await client.calls.makeCall({
+     *         auth_id: "MA_XXXXXX",
+     *         from: "14155551234",
+     *         to: "+919876543210<+919876543211<+919876543212",
+     *         answer_url: "https://example.com/answer",
+     *         answer_method: "POST"
+     *     })
      */
     public makeCall(
         request: Vobiz.MakeCallRequest,

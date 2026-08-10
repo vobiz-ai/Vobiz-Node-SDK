@@ -1,5 +1,6 @@
 export * from "./Account.js";
 export * from "./Application.js";
+export * from "./BadRequestErrorBody.js";
 export * from "./Balance.js";
 export * from "./BalanceTransferResult.js";
 export * from "./Call.js";
@@ -9,6 +10,7 @@ export * from "./ChannelPricingPreview.js";
 export * from "./ChannelSubscription.js";
 export * from "./Endpoint.js";
 export * from "./Error_.js";
+export * from "./ForbiddenErrorBody.js";
 export * from "./InventoryNumber.js";
 export * from "./KycVerificationResult.js";
 export * from "./NotFoundErrorBody.js";

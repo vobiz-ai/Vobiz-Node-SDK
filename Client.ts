@@ -4,6 +4,7 @@ import { AccountClient } from "./api/resources/account/client/Client.js";
 import { ApplicationsClient } from "./api/resources/applications/client/Client.js";
 import { AudioStreamsClient } from "./api/resources/audioStreams/client/Client.js";
 import { BalanceClient } from "./api/resources/balance/client/Client.js";
+import { BulkOperationsClient } from "./api/resources/bulkOperations/client/Client.js";
 import { CallsClient } from "./api/resources/calls/client/Client.js";
 import { CdrClient } from "./api/resources/cdr/client/Client.js";
 import { ConferenceClient } from "./api/resources/conference/client/Client.js";
@@ -58,6 +59,7 @@ export class VobizClient {
     protected _conferenceMembers: ConferenceMembersClient | undefined;
     protected _conferenceRecording: ConferenceRecordingClient | undefined;
     protected _recordings: RecordingsClient | undefined;
+    protected _bulkOperations: BulkOperationsClient | undefined;
     protected _credentials: CredentialsClient | undefined;
     protected _ipAccessControlList: IpAccessControlListClient | undefined;
     protected _originationUri: OriginationUriClient | undefined;
@@ -147,6 +149,10 @@ export class VobizClient {
 
     public get recordings(): RecordingsClient {
         return (this._recordings ??= new RecordingsClient(this._options));
+    }
+
+    public get bulkOperations(): BulkOperationsClient {
+        return (this._bulkOperations ??= new BulkOperationsClient(this._options));
     }
 
     public get credentials(): CredentialsClient {
