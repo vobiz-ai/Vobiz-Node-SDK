@@ -17,7 +17,7 @@
     "prepublishOnly": "npm run build"
   },
   "repository": "github:vobiz-ai/Vobiz-Node-SDK",
-  "homepage": "https://vobiz.ai/docs",
+  "homepage": "https://docs.vobiz.ai",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.4.0",
