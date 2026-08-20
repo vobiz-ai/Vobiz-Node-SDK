@@ -49,7 +49,7 @@ const client = new VobizClient({
 const response = await client.calls.makeCall({
     auth_id: "MA_XXXXXX",
     from: "14155551234",
-    to: "+919876543210",
+    to: "+15550003333",
     answer_url: "https://example.com/answer",
     answer_method: "POST",
 });
@@ -77,7 +77,7 @@ import { Vobiz } from "@vobiz/sdk";
 const request: Vobiz.MakeCallRequest = {
     auth_id: "MA_XXXXXX",
     from: "14155551234",
-    to: "+919876543210",
+    to: "+15550003333",
     answer_url: "https://example.com/answer",
     answer_method: "POST",
 };
@@ -135,7 +135,7 @@ try {
     await client.calls.makeCall({
         auth_id: "MA_XXXXXX",
         from: "14155551234",
-        to: "+919876543210",
+        to: "+15550003333",
         answer_url: "https://example.com/answer",
         answer_method: "POST",
     });
@@ -163,7 +163,7 @@ const { data, rawResponse } = await client.calls
     .makeCall({
         auth_id: "MA_XXXXXX",
         from: "14155551234",
-        to: "+919876543210",
+        to: "+15550003333",
         answer_url: "https://example.com/answer",
         answer_method: "POST",
     })
