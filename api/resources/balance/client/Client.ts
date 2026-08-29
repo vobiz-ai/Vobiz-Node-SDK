@@ -96,14 +96,28 @@ export class BalanceClient {
     }
 
     /**
-     * Retrieve paginated transaction history for the account.
+     * Retrieve paginated transaction history for the account, ordered by
+     * `created_at` descending. Filter to a single day by setting `from_date`
+     * and `to_date` to the same date - a bare `YYYY-MM-DD` in `to_date` is
+     * expanded to `23:59:59`, so both bounds are inclusive. Bare dates resolve
+     * in the server timezone (UTC); send an explicit offset such as
+     * `2026-08-28T00:00:00+05:30` to pin a local calendar day.
+     *
+     * `limit` and `offset` are not supported - unknown parameters are silently
+     * dropped. `total` and `summary` are computed over the whole filtered set
+     * and ignore pagination, so `per_page=1` returns full-window totals.
      *
      * @param {Vobiz.ListTransactionsRequest} request
      * @param {BalanceClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @example
      *     await client.balance.listTransactions({
-     *         auth_id: "MA_XXXXXX"
+     *         auth_id: "MA_XXXXXX",
+     *         from_date: "2026-08-25",
+     *         to_date: "2026-08-25",
+     *         type: "debit",
+     *         currency: "INR",
+     *         reference_type: "cdr"
      *     })
      */
     public listTransactions(
@@ -117,10 +131,32 @@ export class BalanceClient {
         request: Vobiz.ListTransactionsRequest,
         requestOptions?: BalanceClient.RequestOptions,
     ): Promise<core.WithRawResponse<Vobiz.ListTransactionsResponse>> {
-        const { auth_id: authId, limit, offset } = request;
+        const {
+            auth_id: authId,
+            page,
+            per_page: perPage,
+            from_date: fromDate,
+            to_date: toDate,
+            type: type_,
+            status,
+            currency,
+            reference_type: referenceType,
+            description,
+            reference,
+            transaction_id: transactionId,
+        } = request;
         const _queryParams: Record<string, unknown> = {
-            limit,
-            offset,
+            page,
+            per_page: perPage,
+            from_date: fromDate,
+            to_date: toDate,
+            type: type_,
+            status: status != null ? status : undefined,
+            currency,
+            reference_type: referenceType,
+            description,
+            reference,
+            transaction_id: transactionId,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -169,6 +205,78 @@ export class BalanceClient {
             _response.rawResponse,
             "GET",
             "/api/v1/Account/{auth_id}/transactions",
+        );
+    }
+
+    /**
+     * Returns the distinct `reference_type` values present on the account's ledger. Use it to discover valid values for the `reference_type` filter on the transactions endpoint.
+     *
+     * @param {Vobiz.ListTransactionReferenceTypesRequest} request
+     * @param {BalanceClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @example
+     *     await client.balance.listTransactionReferenceTypes({
+     *         auth_id: "MA_XXXXXX"
+     *     })
+     */
+    public listTransactionReferenceTypes(
+        request: Vobiz.ListTransactionReferenceTypesRequest,
+        requestOptions?: BalanceClient.RequestOptions,
+    ): core.HttpResponsePromise<Vobiz.ListTransactionReferenceTypesResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__listTransactionReferenceTypes(request, requestOptions));
+    }
+
+    private async __listTransactionReferenceTypes(
+        request: Vobiz.ListTransactionReferenceTypesRequest,
+        requestOptions?: BalanceClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Vobiz.ListTransactionReferenceTypesResponse>> {
+        const { auth_id: authId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "X-Auth-ID": requestOptions?.authId ?? this._options?.authId,
+                "X-Auth-Token": requestOptions?.authToken ?? this._options?.authToken,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.VobizEnvironment.Production,
+                `api/v1/Account/${core.url.encodePathParam(authId)}/transactions/reference-types`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as Vobiz.ListTransactionReferenceTypesResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.VobizError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "GET",
+            "/api/v1/Account/{auth_id}/transactions/reference-types",
         );
     }
 }
