@@ -14,7 +14,8 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
   },
   "repository": "github:vobiz-ai/Vobiz-Node-SDK",
   "homepage": "https://vobiz.ai/docs",
